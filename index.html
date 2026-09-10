@@ -18,6 +18,8 @@
     --sun:#ffc300;
     --paper:#fff8e6;
     --card:#ffffff;
+    --red:#e63946;
+    --red-dark:#a51f2a;
     --shadow:0 6px 0 rgba(27,32,51,.18);
     --shadow-lg:0 10px 0 rgba(27,32,51,.2);
   }
@@ -31,32 +33,26 @@
     padding:max(14px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));
     -webkit-text-size-adjust:100%;
     overflow-x:hidden;
+    user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;
   }
-  /* Kids poke at everything: kill text selection and long-press menus. */
-  body{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 
   header{display:flex;align-items:center;gap:14px;margin-bottom:18px;min-height:64px}
-  .studs{display:flex;gap:6px}
+  .studs{display:flex;gap:6px;margin-left:auto}
   .stud{width:15px;height:15px;border-radius:50%;background:var(--ink);opacity:.15}
-
   h1{font-size:clamp(28px,6vw,46px);margin:0;letter-spacing:-.5px;line-height:1.05}
-  h1 .of{color:#e63946}
+  h1 .of{color:var(--red)}
   .sub{font-size:clamp(14px,2.4vw,18px);font-weight:700;opacity:.6;margin:2px 0 0}
 
-  /* ---- big round back button ---- */
   .back{
     appearance:none;border:0;cursor:pointer;
-    display:none;align-items:center;justify-content:center;gap:8px;
-    background:var(--sun);color:var(--ink);
-    font:inherit;font-size:26px;
+    display:none;align-items:center;justify-content:center;
+    background:var(--sun);color:var(--ink);font:inherit;font-size:26px;
     min-width:76px;height:76px;padding:0 22px;border-radius:999px;
-    box-shadow:var(--shadow);
-    flex:none;
+    box-shadow:var(--shadow);flex:none;
   }
   .back:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(27,32,51,.18)}
   body[data-view="theme"] .back, body[data-view="play"] .back{display:flex}
 
-  /* ---- grids ---- */
   .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
   @media (max-width:520px){.grid{grid-template-columns:1fr 1fr;gap:12px}}
 
@@ -65,9 +61,7 @@
     background:var(--card);color:var(--ink);
     border-radius:26px;padding:26px 18px 22px;
     display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
-    box-shadow:var(--shadow-lg);
-    transition:transform .08s;
-    text-align:center;
+    box-shadow:var(--shadow-lg);transition:transform .08s;text-align:center;
   }
   .tile:active{transform:translateY(6px) scale(.99);box-shadow:0 4px 0 rgba(27,32,51,.2)}
   .tile .emoji{font-size:clamp(52px,11vw,84px);line-height:1;filter:drop-shadow(0 3px 2px rgba(0,0,0,.15))}
@@ -75,33 +69,60 @@
   .tile .count{font-size:15px;font-weight:700;opacity:.55}
   .tile.theme{border-bottom:10px solid var(--accent)}
 
-  /* ---- video tiles ---- */
   .vtile{padding:0;overflow:hidden;gap:0}
   .vtile .thumbwrap{position:relative;width:100%;aspect-ratio:16/9;background:#0b0d14;max-width:100%}
   .vtile img{width:100%;height:100%;object-fit:cover;display:block;max-width:100%}
-  .vtile .play{
-    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-    font-size:clamp(44px,8vw,64px);color:#fff;
-    text-shadow:0 3px 10px rgba(0,0,0,.55);
-  }
+  .vtile .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-size:clamp(44px,8vw,64px);color:#fff;text-shadow:0 3px 10px rgba(0,0,0,.55)}
   .vtile .vlabel{padding:14px 14px 16px;font-size:clamp(17px,2.6vw,24px);width:100%}
   .vtile .who{display:block;font-size:13px;font-weight:700;opacity:.5;margin-top:3px}
   .vtile[hidden]{display:none}
 
-  /* ---- player ---- */
-  #player{background:#0b0d14;border-radius:26px;overflow:hidden;box-shadow:var(--shadow-lg)}
-  #player .frame{position:relative;width:100%;aspect-ratio:16/9;max-width:100%}
-  #player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  /* ---------- player ---------- */
+  #stage{background:#0b0d14;border-radius:26px;overflow:hidden;box-shadow:var(--shadow-lg);position:relative}
+  #frame{position:relative;width:100%;aspect-ratio:16/9;max-width:100%}
+  #frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  /* The shield sits over the whole player so no tap ever reaches YouTube's own
+     chrome - no logo link, no title link, no end-screen thumbnails. Every
+     control Aidan can touch is ours, below. */
+  #shield{position:absolute;inset:0;z-index:2;background:transparent}
+
+  #bar{height:12px;background:rgba(255,255,255,.18);position:relative;z-index:3}
+  #bar span{display:block;height:100%;width:0;background:var(--sun);transition:width .25s linear}
+
+  #controls{display:flex;gap:12px;justify-content:center;align-items:center;margin:18px 0 0;flex-wrap:wrap}
+  .ctl{
+    appearance:none;border:0;cursor:pointer;font:inherit;
+    background:var(--card);color:var(--ink);
+    font-size:clamp(22px,4vw,30px);
+    min-width:96px;height:84px;padding:0 20px;border-radius:24px;
+    box-shadow:var(--shadow);
+    display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .ctl:active{transform:translateY(5px);box-shadow:0 1px 0 rgba(27,32,51,.18)}
+  .ctl.big{background:var(--red);color:#fff;box-shadow:0 7px 0 var(--red-dark);min-width:132px}
+  .ctl.big:active{box-shadow:0 2px 0 var(--red-dark)}
+  .ctl small{display:block;font-size:13px;opacity:.7;font-weight:700}
+
   #nowtitle{font-size:clamp(19px,3vw,28px);margin:16px 4px 0;text-align:center}
 
-  /* ---- surprise button ---- */
+  /* ---------- the "video finished" screen, shown instead of YouTube's ---------- */
+  #done{
+    position:absolute;inset:0;z-index:4;background:var(--paper);
+    display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+    text-align:center;padding:20px;
+  }
+  #done.on{display:flex}
+  #done .yay{font-size:clamp(28px,6vw,48px)}
+  #done .row{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+
   .surprise{
     appearance:none;border:0;cursor:pointer;font:inherit;
     margin:26px auto 0;display:flex;align-items:center;gap:12px;
-    background:#e63946;color:#fff;font-size:clamp(20px,3.4vw,26px);
-    padding:20px 34px;border-radius:999px;box-shadow:0 7px 0 #a51f2a;
+    background:var(--red);color:#fff;font-size:clamp(20px,3.4vw,26px);
+    padding:20px 34px;border-radius:999px;box-shadow:0 7px 0 var(--red-dark);
   }
-  .surprise:active{transform:translateY(5px);box-shadow:0 2px 0 #a51f2a}
+  .surprise:active{transform:translateY(5px);box-shadow:0 2px 0 var(--red-dark)}
 
   .view[hidden]{display:none}
   footer{margin-top:36px;text-align:center;font-size:13px;font-weight:700;opacity:.45;line-height:1.6}
@@ -129,7 +150,25 @@
   </section>
 
   <section class="view" id="view-play" hidden>
-    <div id="player"><div class="frame" id="frame"></div></div>
+    <div id="stage">
+      <div id="frame"></div>
+      <div id="shield"></div>
+      <div id="bar"><span id="barfill"></span></div>
+      <div id="done">
+        <div class="yay">All done! 🧱</div>
+        <p class="sub">Now go build it!</p>
+        <div class="row">
+          <button class="ctl big" id="again">🔁 Again</button>
+          <button class="ctl" id="pickanother">⬅ Something else</button>
+        </div>
+      </div>
+    </div>
+    <div id="controls">
+      <button class="ctl" id="rew" aria-label="Back ten seconds">⏪<small>10s</small></button>
+      <button class="ctl big" id="pp" aria-label="Play or pause">⏸</button>
+      <button class="ctl" id="fwd" aria-label="Forward ten seconds">⏩<small>10s</small></button>
+      <button class="ctl" id="restart" aria-label="Start over">↺<small>start</small></button>
+    </div>
     <p id="nowtitle"></p>
   </section>
 </main>
@@ -139,6 +178,7 @@
   Built for Aidan 🧱
 </footer>
 
+<script src="https://www.youtube.com/iframe_api"></script>
 <script>
 const THEMES = [
   { id:"space", name:"Space", emoji:"🚀", accent:"#4f46e5", videos:[
@@ -167,7 +207,7 @@ const THEMES = [
 const $ = s => document.querySelector(s);
 const themeById = id => THEMES.find(t => t.id === id);
 
-/* ---------- home ---------- */
+/* ---------------- home ---------------- */
 function renderHome(){
   const wrap = $("#themes");
   wrap.innerHTML = "";
@@ -175,16 +215,14 @@ function renderHome(){
     const b = document.createElement("button");
     b.className = "tile theme";
     b.style.setProperty("--accent", t.accent);
-    b.innerHTML =
-      `<span class="emoji">${t.emoji}</span>` +
-      `<span class="label">${t.name}</span>` +
-      `<span class="count">${t.videos.length} builds</span>`;
+    b.innerHTML = `<span class="emoji">${t.emoji}</span><span class="label">${t.name}</span>` +
+                  `<span class="count">${t.videos.length} builds</span>`;
     b.onclick = () => go(`#/${t.id}`);
     wrap.append(b);
   }
 }
 
-/* ---------- one theme ---------- */
+/* ---------------- one theme ---------------- */
 function renderTheme(t){
   const wrap = $("#videos");
   wrap.innerHTML = "";
@@ -192,10 +230,8 @@ function renderTheme(t){
     const b = document.createElement("button");
     b.className = "tile vtile";
     b.innerHTML =
-      `<span class="thumbwrap">` +
-        `<img src="https://i.ytimg.com/vi/${v.id}/hqdefault.jpg" alt="" loading="lazy">` +
-        `<span class="play">▶</span>` +
-      `</span>` +
+      `<span class="thumbwrap"><img src="https://i.ytimg.com/vi/${v.id}/hqdefault.jpg" alt="" loading="lazy">` +
+      `<span class="play">▶</span></span>` +
       `<span class="vlabel">${v.label}<span class="who">by ${v.who}</span></span>`;
     // A missing thumbnail means the video is gone or private: hide the tile
     // rather than let him tap into an error screen.
@@ -205,17 +241,109 @@ function renderTheme(t){
   }
 }
 
-/* ---------- player ---------- */
-function renderPlayer(t, v){
-  const src = "https://www.youtube-nocookie.com/embed/" + v.id +
-              "?rel=0&modestbranding=1&playsinline=1&autoplay=1&iv_load_policy=3";
-  $("#frame").innerHTML =
-    `<iframe src="${src}" title="${v.label}" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
-  $("#nowtitle").textContent = v.label + "  " + t.emoji;
-}
-function stopPlayer(){ $("#frame").innerHTML = ""; }
+/* ================= player =================
+   Uses the YouTube IFrame API with controls turned off, a transparent shield
+   over the player, and our own buttons. Two things this buys us:
+     - nothing YouTube renders is tappable, so there is no route out of here;
+     - when the video ends we stop the player and cover it with our own
+       "All done!" panel, so YouTube's grid of more videos is never seen. */
+let player = null;         // the YT.Player instance, once the API has loaded
+let apiReady = false;
+let pending = null;        // a video asked for before the API finished loading
+let ticker = null;
 
-/* ---------- routing (hash, so the iPad back swipe works) ---------- */
+window.onYouTubeIframeAPIReady = () => {
+  apiReady = true;
+  if (pending){ const v = pending; pending = null; mount(v); }
+};
+
+function mount(v){
+  if (!apiReady){ pending = v; return; }
+  teardown();
+  const host = document.createElement("div");
+  $("#frame").append(host);
+  player = new YT.Player(host, {
+    videoId: v.id,
+    host: "https://www.youtube-nocookie.com",
+    playerVars: {
+      controls: 0,          // no YouTube control bar
+      rel: 0,
+      playsinline: 1,
+      fs: 0,                // no fullscreen button (fullscreen shows YT chrome)
+      disablekb: 1,
+      modestbranding: 1,
+      iv_load_policy: 3,    // no annotation cards
+      autoplay: 1,
+    },
+    events: {
+      onReady: e => { e.target.playVideo(); startTicker(); setPP(true); },
+      onStateChange: e => {
+        if (e.data === YT.PlayerState.ENDED) finish();
+        if (e.data === YT.PlayerState.PLAYING) setPP(true);
+        if (e.data === YT.PlayerState.PAUSED)  setPP(false);
+      },
+      // A video that has died since the last check: don't leave him staring
+      // at a YouTube error, just show the done panel with a way out.
+      onError: () => finish(),
+    },
+  });
+}
+
+function teardown(){
+  stopTicker();
+  if (player && player.destroy) { try { player.destroy(); } catch(e){} }
+  player = null;
+  $("#frame").innerHTML = "";
+  $("#done").classList.remove("on");
+  $("#barfill").style.width = "0";
+}
+
+function finish(){
+  stopTicker();
+  if (player && player.stopVideo) { try { player.stopVideo(); } catch(e){} }
+  $("#done").classList.add("on");   // our panel, covering YouTube's end screen
+  $("#barfill").style.width = "100%";
+}
+
+function setPP(playing){ $("#pp").textContent = playing ? "⏸" : "▶"; }
+
+function startTicker(){
+  stopTicker();
+  ticker = setInterval(() => {
+    if (!player || !player.getDuration) return;
+    const d = player.getDuration() || 0, t = player.getCurrentTime() || 0;
+    if (d > 0) $("#barfill").style.width = Math.min(100, (t / d) * 100) + "%";
+  }, 500);
+}
+function stopTicker(){ if (ticker) clearInterval(ticker); ticker = null; }
+
+function nudge(secs){
+  if (!player || !player.getCurrentTime) return;
+  const d = player.getDuration() || 0;
+  let t = player.getCurrentTime() + secs;
+  t = Math.max(0, d ? Math.min(t, d - 0.5) : t);
+  player.seekTo(t, true);
+  $("#done").classList.remove("on");
+  startTicker();
+}
+
+$("#pp").onclick = () => {
+  if (!player || !player.getPlayerState) return;
+  const s = player.getPlayerState();
+  if (s === YT.PlayerState.PLAYING){ player.pauseVideo(); setPP(false); }
+  else { $("#done").classList.remove("on"); player.playVideo(); setPP(true); startTicker(); }
+};
+$("#rew").onclick     = () => nudge(-10);
+$("#fwd").onclick     = () => nudge(10);
+$("#restart").onclick = () => { if (player && player.seekTo){ player.seekTo(0, true); player.playVideo(); $("#done").classList.remove("on"); startTicker(); } };
+$("#again").onclick   = () => { if (player && player.seekTo){ player.seekTo(0, true); player.playVideo(); $("#done").classList.remove("on"); startTicker(); } };
+$("#pickanother").onclick = () => {
+  const parts = hashParts();
+  go(parts.length > 1 ? "#/" + parts[0] : "#/");
+};
+
+/* ---------------- routing (hash, so the iPad back swipe works) ---------------- */
+const hashParts = () => location.hash.replace(/^#\/?/, "").split("/").filter(Boolean);
 function go(hash){ location.hash = hash; }
 
 function show(view, title, subtitle){
@@ -227,28 +355,27 @@ function show(view, title, subtitle){
 }
 
 function route(){
-  const parts = location.hash.replace(/^#\/?/, "").split("/").filter(Boolean);
+  const parts = hashParts();
   const t = parts[0] ? themeById(parts[0]) : null;
 
   if (!t){
-    stopPlayer();
-    renderHome();
+    teardown(); renderHome();
     show("home", 'Legos <span class="of">for</span> Aidan', "Pick something to build!");
     return;
   }
   const v = parts[1] ? t.videos.find(x => x.id === parts[1]) : null;
   if (!v){
-    stopPlayer();
-    renderTheme(t);
+    teardown(); renderTheme(t);
     show("theme", `${t.emoji} ${t.name}`, "Pick a build to watch!");
     return;
   }
-  renderPlayer(t, v);
+  mount(v);
+  $("#nowtitle").textContent = v.label + "  " + t.emoji;
   show("play", `${t.emoji} ${t.name}`, "Watch, then build it!");
 }
 
 $("#back").onclick = () => {
-  const parts = location.hash.replace(/^#\/?/, "").split("/").filter(Boolean);
+  const parts = hashParts();
   go(parts.length > 1 ? "#/" + parts[0] : "#/");
 };
 
