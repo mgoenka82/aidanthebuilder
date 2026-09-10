@@ -1,4 +1,4 @@
-# Legos for Aidan 🧱
+# Aidan the Builder 🧱
 
 A deliberately simple website so a five-year-old can find a new thing to build
 out of the LEGO bricks he already has: pick a theme, pick a build, watch it.
@@ -36,7 +36,23 @@ The app is deployed from this repo's public clone URL, which App Platform
 serves without a webhook — so a push updates GitHub but not the live site.
 `deploy.sh` triggers the deploy and waits for it.
 
+## The site
+
+<https://aidanthebuilder-tetyi.ondigitalocean.app>
+
 ## On the iPad
 
 Open the site in Safari, then **Share → Add to Home Screen**. It launches
 full-screen with no address bar, so there is nothing to tap out of.
+
+## Why the player is built the way it is
+
+The embed is driven through the YouTube IFrame API with `controls: 0`, a
+transparent shield over the player, and our own buttons below it. That is
+deliberate: YouTube's own player makes the title and logo tappable links out
+to youtube.com, and fills the frame with recommended videos when one ends. A
+five-year-old finds both immediately. On `ENDED` we stop the player and cover
+it with our own panel, so the recommendation grid is never rendered.
+
+Ads inside the embed cannot be removed, and the YouTube wordmark may flash
+while a video loads. Those are the terms of using their player.
