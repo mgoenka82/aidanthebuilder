@@ -38,12 +38,18 @@ serves without a webhook — so a push updates GitHub but not the live site.
 
 ## The site
 
-<https://aidan.mg82.org>
+<https://mg82.org>
 
-A subdomain of a domain that was already owned, so it costs nothing. DNS lives
-at Cloudflare: a single `CNAME aidan -> aidanthebuilder-tetyi.ondigitalocean.app`,
-deliberately **not proxied** (grey cloud). Cloudflare's proxy would intercept
-Let's Encrypt validation and DigitalOcean's certificate would never renew.
+A domain that was already owned, so the site costs nothing to run. `www.` and
+`aidan.` point at it as well.
+
+DNS lives at Cloudflare: `CNAME` records for the apex, `www`, and `aidan`, all
+aimed at `aidanthebuilder-tetyi.ondigitalocean.app`. The apex CNAME is legal
+because Cloudflare flattens root CNAMEs into A records.
+
+All three are deliberately **not proxied** (grey cloud). Cloudflare's proxy
+intercepts Let's Encrypt validation, and DigitalOcean's certificate would stop
+renewing - the site would go dark on a ~90-day fuse.
 
 ## On the iPad
 
