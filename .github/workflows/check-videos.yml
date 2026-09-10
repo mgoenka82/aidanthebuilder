@@ -1,0 +1,23 @@
+name: Check videos still play
+
+# Videos belong to other people: they can be deleted, made private, or have
+# embedding switched off at any time. Check weekly so a dead tile gets noticed
+# by a failing run (and its email) rather than by a disappointed five-year-old.
+on:
+  schedule:
+    - cron: "0 13 * * 1"   # Mondays, 13:00 UTC (~9am New York)
+  workflow_dispatch:
+  push:
+    paths:
+      - index.html
+      - scripts/check-videos.py
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python scripts/check-videos.py

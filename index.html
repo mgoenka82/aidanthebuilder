@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Legos for Aidan</title>
+<meta name="description" content="Build ideas for Aidan, using the LEGO bricks he already has.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Aidan's Legos">
+<meta name="theme-color" content="#ffc300">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<style>
+  :root{
+    --ink:#1b2033;
+    --sun:#ffc300;
+    --paper:#fff8e6;
+    --card:#ffffff;
+    --shadow:0 6px 0 rgba(27,32,51,.18);
+    --shadow-lg:0 10px 0 rgba(27,32,51,.2);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Baloo 2",Verdana,"Trebuchet MS",system-ui,sans-serif;
+    font-weight:700;
+    padding:max(14px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));
+    -webkit-text-size-adjust:100%;
+    overflow-x:hidden;
+  }
+  /* Kids poke at everything: kill text selection and long-press menus. */
+  body{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+
+  header{display:flex;align-items:center;gap:14px;margin-bottom:18px;min-height:64px}
+  .studs{display:flex;gap:6px}
+  .stud{width:15px;height:15px;border-radius:50%;background:var(--ink);opacity:.15}
+
+  h1{font-size:clamp(28px,6vw,46px);margin:0;letter-spacing:-.5px;line-height:1.05}
+  h1 .of{color:#e63946}
+  .sub{font-size:clamp(14px,2.4vw,18px);font-weight:700;opacity:.6;margin:2px 0 0}
+
+  /* ---- big round back button ---- */
+  .back{
+    appearance:none;border:0;cursor:pointer;
+    display:none;align-items:center;justify-content:center;gap:8px;
+    background:var(--sun);color:var(--ink);
+    font:inherit;font-size:26px;
+    min-width:76px;height:76px;padding:0 22px;border-radius:999px;
+    box-shadow:var(--shadow);
+    flex:none;
+  }
+  .back:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(27,32,51,.18)}
+  body[data-view="theme"] .back, body[data-view="play"] .back{display:flex}
+
+  /* ---- grids ---- */
+  .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+  @media (max-width:520px){.grid{grid-template-columns:1fr 1fr;gap:12px}}
+
+  .tile{
+    appearance:none;border:0;cursor:pointer;font:inherit;
+    background:var(--card);color:var(--ink);
+    border-radius:26px;padding:26px 18px 22px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+    box-shadow:var(--shadow-lg);
+    transition:transform .08s;
+    text-align:center;
+  }
+  .tile:active{transform:translateY(6px) scale(.99);box-shadow:0 4px 0 rgba(27,32,51,.2)}
+  .tile .emoji{font-size:clamp(52px,11vw,84px);line-height:1;filter:drop-shadow(0 3px 2px rgba(0,0,0,.15))}
+  .tile .label{font-size:clamp(20px,3.4vw,30px)}
+  .tile .count{font-size:15px;font-weight:700;opacity:.55}
+  .tile.theme{border-bottom:10px solid var(--accent)}
+
+  /* ---- video tiles ---- */
+  .vtile{padding:0;overflow:hidden;gap:0}
+  .vtile .thumbwrap{position:relative;width:100%;aspect-ratio:16/9;background:#0b0d14;max-width:100%}
+  .vtile img{width:100%;height:100%;object-fit:cover;display:block;max-width:100%}
+  .vtile .play{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-size:clamp(44px,8vw,64px);color:#fff;
+    text-shadow:0 3px 10px rgba(0,0,0,.55);
+  }
+  .vtile .vlabel{padding:14px 14px 16px;font-size:clamp(17px,2.6vw,24px);width:100%}
+  .vtile .who{display:block;font-size:13px;font-weight:700;opacity:.5;margin-top:3px}
+  .vtile[hidden]{display:none}
+
+  /* ---- player ---- */
+  #player{background:#0b0d14;border-radius:26px;overflow:hidden;box-shadow:var(--shadow-lg)}
+  #player .frame{position:relative;width:100%;aspect-ratio:16/9;max-width:100%}
+  #player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  #nowtitle{font-size:clamp(19px,3vw,28px);margin:16px 4px 0;text-align:center}
+
+  /* ---- surprise button ---- */
+  .surprise{
+    appearance:none;border:0;cursor:pointer;font:inherit;
+    margin:26px auto 0;display:flex;align-items:center;gap:12px;
+    background:#e63946;color:#fff;font-size:clamp(20px,3.4vw,26px);
+    padding:20px 34px;border-radius:999px;box-shadow:0 7px 0 #a51f2a;
+  }
+  .surprise:active{transform:translateY(5px);box-shadow:0 2px 0 #a51f2a}
+
+  .view[hidden]{display:none}
+  footer{margin-top:36px;text-align:center;font-size:13px;font-weight:700;opacity:.45;line-height:1.6}
+</style>
+</head>
+<body data-view="home">
+
+<header>
+  <button class="back" id="back" aria-label="Go back">⬅</button>
+  <div>
+    <h1 id="title">Legos <span class="of">for</span> Aidan</h1>
+    <p class="sub" id="subtitle">Pick something to build!</p>
+  </div>
+  <div class="studs" aria-hidden="true"><i class="stud"></i><i class="stud"></i><i class="stud"></i><i class="stud"></i></div>
+</header>
+
+<main>
+  <section class="view" id="view-home">
+    <div class="grid" id="themes"></div>
+    <button class="surprise" id="surprise">🎲 Surprise me!</button>
+  </section>
+
+  <section class="view" id="view-theme" hidden>
+    <div class="grid" id="videos"></div>
+  </section>
+
+  <section class="view" id="view-play" hidden>
+    <div id="player"><div class="frame" id="frame"></div></div>
+    <p id="nowtitle"></p>
+  </section>
+</main>
+
+<footer>
+  Videos are made by their YouTube channels — thank you, brick builders.<br>
+  Built for Aidan 🧱
+</footer>
+
+<script>
+const THEMES = [
+  { id:"space", name:"Space", emoji:"🚀", accent:"#4f46e5", videos:[
+      { id:"mw4hMrpVkRg", label:"Space Shuttle", who:"BrickHow" },
+      { id:"4BrIaG596_o", label:"Rocket Shuttle", who:"BrickHow" },
+  ]},
+  { id:"cars", name:"Cars", emoji:"🏎️", accent:"#e63946", videos:[
+      { id:"aOl30M7jW1o", label:"Race Car", who:"BrickHow" },
+      { id:"Z5O56y8Tpog", label:"Little Car", who:"Sasha Toys TV" },
+  ]},
+  { id:"trains", name:"Trains", emoji:"🚂", accent:"#0891b2", videos:[
+      { id:"DqeMaauTkxY", label:"Big Train", who:"BrickHow" },
+      { id:"ZKJHSWtp8ok", label:"Steam Train", who:"AHA KIDS" },
+  ]},
+  { id:"robots", name:"Robots", emoji:"🤖", accent:"#7c3aed", videos:[
+      { id:"bTL-zdLoVo0", label:"Robot", who:"BrickHow" },
+      { id:"7dfJtEEMORo", label:"Robot Friend", who:"BrickHow" },
+  ]},
+  { id:"titanic", name:"Titanic", emoji:"🚢", accent:"#0f766e", videos:[
+      { id:"velhnSnWE4c", label:"Mini Titanic", who:"Legoproduction" },
+      { id:"HzAHmVemK7s", label:"Titanic Ship", who:"RJMBricks" },
+      { id:"A-ti4sMSAvY", label:"Big Titanic", who:"Tiago Catarino" },
+  ]},
+];
+
+const $ = s => document.querySelector(s);
+const themeById = id => THEMES.find(t => t.id === id);
+
+/* ---------- home ---------- */
+function renderHome(){
+  const wrap = $("#themes");
+  wrap.innerHTML = "";
+  for (const t of THEMES){
+    const b = document.createElement("button");
+    b.className = "tile theme";
+    b.style.setProperty("--accent", t.accent);
+    b.innerHTML =
+      `<span class="emoji">${t.emoji}</span>` +
+      `<span class="label">${t.name}</span>` +
+      `<span class="count">${t.videos.length} builds</span>`;
+    b.onclick = () => go(`#/${t.id}`);
+    wrap.append(b);
+  }
+}
+
+/* ---------- one theme ---------- */
+function renderTheme(t){
+  const wrap = $("#videos");
+  wrap.innerHTML = "";
+  for (const v of t.videos){
+    const b = document.createElement("button");
+    b.className = "tile vtile";
+    b.innerHTML =
+      `<span class="thumbwrap">` +
+        `<img src="https://i.ytimg.com/vi/${v.id}/hqdefault.jpg" alt="" loading="lazy">` +
+        `<span class="play">▶</span>` +
+      `</span>` +
+      `<span class="vlabel">${v.label}<span class="who">by ${v.who}</span></span>`;
+    // A missing thumbnail means the video is gone or private: hide the tile
+    // rather than let him tap into an error screen.
+    b.querySelector("img").onerror = () => { b.hidden = true; };
+    b.onclick = () => go(`#/${t.id}/${v.id}`);
+    wrap.append(b);
+  }
+}
+
+/* ---------- player ---------- */
+function renderPlayer(t, v){
+  const src = "https://www.youtube-nocookie.com/embed/" + v.id +
+              "?rel=0&modestbranding=1&playsinline=1&autoplay=1&iv_load_policy=3";
+  $("#frame").innerHTML =
+    `<iframe src="${src}" title="${v.label}" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
+  $("#nowtitle").textContent = v.label + "  " + t.emoji;
+}
+function stopPlayer(){ $("#frame").innerHTML = ""; }
+
+/* ---------- routing (hash, so the iPad back swipe works) ---------- */
+function go(hash){ location.hash = hash; }
+
+function show(view, title, subtitle){
+  document.body.dataset.view = view;
+  for (const id of ["home","theme","play"]) $("#view-"+id).hidden = (id !== view);
+  $("#title").innerHTML = title;
+  $("#subtitle").textContent = subtitle;
+  window.scrollTo(0,0);
+}
+
+function route(){
+  const parts = location.hash.replace(/^#\/?/, "").split("/").filter(Boolean);
+  const t = parts[0] ? themeById(parts[0]) : null;
+
+  if (!t){
+    stopPlayer();
+    renderHome();
+    show("home", 'Legos <span class="of">for</span> Aidan', "Pick something to build!");
+    return;
+  }
+  const v = parts[1] ? t.videos.find(x => x.id === parts[1]) : null;
+  if (!v){
+    stopPlayer();
+    renderTheme(t);
+    show("theme", `${t.emoji} ${t.name}`, "Pick a build to watch!");
+    return;
+  }
+  renderPlayer(t, v);
+  show("play", `${t.emoji} ${t.name}`, "Watch, then build it!");
+}
+
+$("#back").onclick = () => {
+  const parts = location.hash.replace(/^#\/?/, "").split("/").filter(Boolean);
+  go(parts.length > 1 ? "#/" + parts[0] : "#/");
+};
+
+$("#surprise").onclick = () => {
+  const t = THEMES[Math.floor(Math.random()*THEMES.length)];
+  const v = t.videos[Math.floor(Math.random()*t.videos.length)];
+  go(`#/${t.id}/${v.id}`);
+};
+
+addEventListener("hashchange", route);
+route();
+</script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "Legos for Aidan",
+  "short_name": "Aidan's Legos",
+  "description": "Build ideas for Aidan, using the LEGO bricks he already has.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#fff8e6",
+  "theme_color": "#ffc300",
+  "icons": [
+    { "src": "icon-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
