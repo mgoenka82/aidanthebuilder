@@ -7,7 +7,7 @@
 set -euo pipefail
 
 APP_ID="e6fc3b93-4883-480f-bd01-803623113468"
-URL="https://aidanthebuilder-tetyi.ondigitalocean.app"
+URL="https://aidan.mg82.org"
 
 echo "==> triggering deploy of $APP_ID"
 doctl apps create-deployment "$APP_ID" --format ID,Phase --no-header

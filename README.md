@@ -38,7 +38,12 @@ serves without a webhook — so a push updates GitHub but not the live site.
 
 ## The site
 
-<https://aidanthebuilder-tetyi.ondigitalocean.app>
+<https://aidan.mg82.org>
+
+A subdomain of a domain that was already owned, so it costs nothing. DNS lives
+at Cloudflare: a single `CNAME aidan -> aidanthebuilder-tetyi.ondigitalocean.app`,
+deliberately **not proxied** (grey cloud). Cloudflare's proxy would intercept
+Let's Encrypt validation and DigitalOcean's certificate would never renew.
 
 ## On the iPad
 
