@@ -24,13 +24,17 @@ Add an entry to the right theme in `THEMES` in `index.html`:
 ```
 
 Keep `label` to two words — it is read by someone who is still learning to
-read. Then commit and push; DigitalOcean App Platform redeploys on its own.
-
-Check it first:
+read. Then check it and ship it:
 
 ```sh
-python3 scripts/check-videos.py
+python3 scripts/check-videos.py    # are the embeds all playable?
+git commit -am "add a build" && git push
+./deploy.sh                        # push alone does NOT redeploy
 ```
+
+The app is deployed from this repo's public clone URL, which App Platform
+serves without a webhook — so a push updates GitHub but not the live site.
+`deploy.sh` triggers the deploy and waits for it.
 
 ## On the iPad
 
