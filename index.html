@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Legos for Aidan</title>
+<title>Aidan the Builder</title>
 <meta name="description" content="Build ideas for Aidan, using the LEGO bricks he already has.">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Aidan's Legos">
+<meta name="apple-mobile-web-app-title" content="Aidan Builds">
 <meta name="theme-color" content="#ffc300">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -133,7 +133,7 @@
 <header>
   <button class="back" id="back" aria-label="Go back">⬅</button>
   <div>
-    <h1 id="title">Legos <span class="of">for</span> Aidan</h1>
+    <h1 id="title">Aidan <span class="of">the</span> Builder</h1>
     <p class="sub" id="subtitle">Pick something to build!</p>
   </div>
   <div class="studs" aria-hidden="true"><i class="stud"></i><i class="stud"></i><i class="stud"></i><i class="stud"></i></div>
@@ -360,7 +360,7 @@ function route(){
 
   if (!t){
     teardown(); renderHome();
-    show("home", 'Legos <span class="of">for</span> Aidan', "Pick something to build!");
+    show("home", 'Aidan <span class="of">the</span> Builder', "Pick something to build!");
     return;
   }
   const v = parts[1] ? t.videos.find(x => x.id === parts[1]) : null;

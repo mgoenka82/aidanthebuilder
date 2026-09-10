@@ -1,6 +1,6 @@
 {
-  "name": "Legos for Aidan",
-  "short_name": "Aidan's Legos",
+  "name": "Aidan the Builder",
+  "short_name": "Aidan Builds",
   "description": "Build ideas for Aidan, using the LEGO bricks he already has.",
   "start_url": "./",
   "scope": "./",
